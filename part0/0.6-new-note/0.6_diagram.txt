@@ -1,0 +1,12 @@
+title 0.6: new note (SPA)
+
+note over browser:
+The user submits new comment using the form.
+This time JavaScript handles the POST request 
+by handling the form submit event, 
+rendering new comment on the page 
+and sending it to the server.
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+server-->browser: responds with code 201 created
