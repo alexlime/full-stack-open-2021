@@ -2,4 +2,4 @@
 
 ✓ &nbsp;&nbsp; Part 0 Fundamentals of Web apps  
 ✓ &nbsp;&nbsp; Part 1 Introduction to React  
-✓ &nbsp;&nbsp; Part 1 Introduction to React  
+✓ &nbsp;&nbsp; Part 2 Communicating with server
