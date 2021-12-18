@@ -1,53 +1,12 @@
 import React, { useState, useEffect } from 'react'
 // import axios from 'axios'
 import personsService from './services/persons'
+import Notification from './components/Notification'
+import Persons from './components/Persons'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import './index.css'
 
-
-const Persons = ({persons, deletePerson}) => {
-  return (
-    <ul>
-      {persons.map(eachPerson =>
-        <li key={eachPerson.name}> 
-          {eachPerson.name} {eachPerson.number}
-          <button onClick={() => deletePerson(eachPerson.id)}>
-            delete
-          </button>
-        </li>
-      )}
-    </ul>   
-  )
-}
-
-
-const Filter = ({label, value, handle}) => {
-  return (
-    <div>
-      <label>
-        {label}
-        <input value={value} onChange={handle} />
-      </label>
-    </div>
-  )
-}
-
-
-const PersonForm = ({onSubmit, inputs}) => {
-  return (
-    <form onSubmit={onSubmit}>
-      {inputs.map(i =>
-        <div key={i.label}>
-          <label>
-            {i.label}
-            <input value={i.value} onChange={i.onChange} />
-          </label>
-        </div>
-      )}
-      <div>
-      <button type="submit">add</button>
-      </div>
-    </form>
-  )
-}
 
 
 const App = () => {
@@ -55,6 +14,11 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ searchName, setNewSearchName ] = useState('')
+  const [notification, setNotification] = useState({
+    text: null,
+    color: 'green' 
+  })
+
 
   useEffect(() => {
     personsService
@@ -66,6 +30,7 @@ const App = () => {
         console.log('fail')
       })
   },[])
+
 
   /* If value received from search input 
      then filter persons list */
@@ -82,48 +47,66 @@ const App = () => {
     setNewName(event.target.value)
   }
 
+
   const handleNumber = (event) => {
     setNewNumber(event.target.value)
   }
+
 
   const handleSearch = (event) => {
     setNewSearchName(event.target.value)
   }
 
+
   const addPerson = (event) => {
     event.preventDefault()
-    // check matches in array of objects
-    // const checkName = obj => obj.name === newName
-    // const nameExists = persons.some(checkName)
     const person = persons.find(person => person.name === newName)
-
     const confirmString = `${newName} is already added to phonebook, replace the old number with the new one?`
-
     const newPerson = { 
       name: newName,
       number: newNumber
     }
 
     if (person === undefined) {
+      // No person exist, Add new
       personsService
         .create(newPerson)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson)) 
+          setNotification({...notification, text: `Added ${newPerson.name}`})
+          setTimeout(() => {
+            setNotification({...notification, text: null})
+          }, 4000)
         })
     } 
     else {
+      // Person exists, ask to update
       if (window.confirm(confirmString)) {
         personsService
           .update(person.id, newPerson) 
           .then(returnedPerson => { 
             setPersons(persons.filter(p => p !== person).concat(returnedPerson))
+            setNotification({...notification, text:`Updated ${newPerson.name}`})
+            setTimeout(() => {
+              setNotification({...notification, text: null})
+            }, 4000)
+          })
+          .catch(error => { 
+            setNotification({
+              text: `Information of ${newPerson.name} has already been removed from server`,
+              color: 'red'
+            })
+            setTimeout(() => {
+              setNotification({...notification, text: null})
+            }, 4000)
+            setPersons(persons.filter(p => p !== person))
           })
       }
     }
-
     setNewName('') 
     setNewNumber('') 
   }
+
 
   const deletePerson = (id) => {
     /* delete person, if person doesn't exist show alert and rerender */
@@ -133,12 +116,20 @@ const App = () => {
     if (window.confirm(confirmString)) {
       personsService
         .del(id)
+        .then( () => {
+          setPersons(persons.filter(p => p.id !== id)) 
+          setNotification({...notification, text: `Deleted: ${personToDelete.name}`})
+          setTimeout(() => {
+            setNotification({...notification, text: null})
+          }, 4000)
+        })
         .catch(error => { 
-          console.log(`${personToDelete.name} is not found on server`)
+          console.log(`${personToDelete.name} has not been found on server, rerender...`)
+          setPersons(persons.filter(p => p.id !== id)) 
         }) 
-        .then( () => setPersons(persons.filter(p => p.id !== id)) )
     }
   }
+
 
   // passed to PersonForm component inputs
   const formInputs = [
@@ -146,9 +137,11 @@ const App = () => {
     {label: "numbers: ", value: newNumber, onChange: handleNumber}
   ]
 
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification text={notification.text} color={notification.color} />
       <Filter 
         label="filter persons: "
         value={searchName} 
