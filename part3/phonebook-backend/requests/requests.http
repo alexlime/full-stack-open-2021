@@ -1,0 +1,41 @@
+#### GET: all
+GET http://localhost:3001/api/persons/
+
+
+### GET: by id
+GET http://localhost:3001/api/persons/BADID
+
+
+### POST: add new contact
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Alex Lime",
+    "number": "222-2222222"
+}
+
+### DELETE
+DELETE http://localhost:3001/api/persons/62ac6d735494724ccc8fb760
+
+### PUT: edit exiting contact
+PUT http://localhost:3001/api/persons/62ab1e77c5a1b18ef9f7e2da
+Content-Type: application/json
+
+{
+    "name": "Alex Lime",
+    "number": "222-2222223"
+}
+
+###
+GET https://tranquil-savannah-80727.herokuapp.com/api/persons
+
+
+###
+POST https://tranquil-savannah-80727.herokuapp.com/api/persons
+Content-Type: application/json
+
+{
+    "name": "Alex Lime",
+    "number": "07078787"
+}

@@ -1,5 +1,6 @@
 # Full Stack open 2021 completed exercises
 
-✓ &nbsp;&nbsp; Part 0 Fundamentals of Web apps  
-✓ &nbsp;&nbsp; Part 1 Introduction to React  
-✓ &nbsp;&nbsp; Part 2 Communicating with server
+✓ &nbsp;&nbsp; Part 0 Fundamentals of Web apps \
+✓ &nbsp;&nbsp; Part 1 Introduction to React \
+✓ &nbsp;&nbsp; Part 2 Communicating with server \
+✓ &nbsp;&nbsp; Part 3 Programming a server with NodeJS and Express
