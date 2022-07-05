@@ -7,6 +7,17 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-  "author": "David Linch",
-  "likes": 0
+  "title": "Another blog post",
+  "author": "Alex Limenko",
+  "likes": 0,
+  "url": "www.al.com"
+}
+
+### UPDATE
+PUT http://localhost:3003/api/blogs/62c43c7be3c988dca2aa3e5a
+Content-Type: application/json
+
+{
+  "title": "UPDATED! All good! :)",
+  "likes": 1
 }
